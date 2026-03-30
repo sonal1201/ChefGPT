@@ -1,0 +1,104 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Get a free hosted Postgres database in seconds: `npx create-db`
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+enum SubscriptionTier {
+  FREE
+  PRO
+}
+
+enum Cuisine {
+  italian
+  chinese
+  mexican
+  indian
+  american
+  thai
+  japanese
+  mediterranean
+  french
+  korean
+  vietnamese
+  spanish
+  greek
+  turkish
+  moroccan
+  brazilian
+  caribbean
+  middle_eastern
+  british
+  german
+  portuguese
+  other
+}
+
+enum Category {
+  breakfast
+  lunch
+  dinner
+  snack
+  dessert
+}
+
+model User {
+  id               String           @id @default(uuid())
+  clerkId          String           @unique
+  firstname        String
+  lastname         String
+  subscriptionTier SubscriptionTier @default(FREE)
+
+  recipes      Recipe[]
+  pantryItems  PantryItem[]
+  savedRecipes SavedRecipe[]
+}
+
+model Recipe {
+  id            String   @id @default(uuid())
+  title         String
+  description   String?
+  cuisine       Cuisine
+  category      Category
+  ingredients   Json
+  imageUrl      String?
+  prepTime      Int
+  cookTime      Int
+  serving       Int
+  nutrition     Json
+  tips          Json
+  substitutions Json
+
+  userId       String
+  user         User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  savedRecipes SavedRecipe[]
+}
+
+model PantryItem {
+  id       String  @id @default(uuid())
+  name     String
+  quantity String
+  imageUrl String?
+
+  userId String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model SavedRecipe {
+  id       String   @id @default(uuid())
+  recipeId String
+  userId   String
+  savedAt  DateTime @default(now())
+
+  recipe Recipe @relation(fields: [recipeId], references: [id], onDelete: Cascade)
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, recipeId])
+}

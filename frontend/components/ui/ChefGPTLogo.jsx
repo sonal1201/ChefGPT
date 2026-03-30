@@ -46,7 +46,7 @@ export default function ChefGPTLogo({ size = 50, showText = true }) {
 
       {/* Brand Text */}
       {showText && (
-        <span className="text-xl font-extrabold tracking-wide text-stone-900 ">
+        <span className="text-xl mt-1 font-extrabold tracking-wide text-stone-900 ">
           Chef
           <span className="group-hover:text-orange-600 transition">
             GPT
